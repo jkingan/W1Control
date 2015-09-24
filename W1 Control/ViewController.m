@@ -8,8 +8,14 @@
 
 #import "ViewController.h"
 #import "WODisplayModel.h"
+#import "WOSerialControl.h"
 
 @implementation ViewController
+
+-(void)dealloc
+{
+
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -22,16 +28,30 @@
     [self performSelector:@selector(randomValue) withObject:nil afterDelay:0];
 }
 
+-(void)viewDidDisappear
+{
+    [[NSApplication sharedApplication] terminate:nil];
+}
+
 -(void)randomValue
 {
-    NSNumber * v = self.displayModel.reverseValue;
+    NSNumber * r = self.displayModel.reverseValue;
+    NSNumber * f = self.displayModel.forwardValue;
 
-    if(!v) {
-        v = [NSNumber numberWithFloat:0];
+    if(!r) {
+        r = [NSNumber numberWithFloat:0];
     }
 
-    v = [NSNumber numberWithFloat:[v floatValue] + 1];
-    self.displayModel.reverseValue = v;
+    if(!f || [f floatValue] < 1) {
+        f = [NSNumber numberWithFloat:60];
+    }
+
+
+    r = [NSNumber numberWithFloat:[r floatValue] + 1.7];
+    self.displayModel.reverseValue = r;
+
+    f = [NSNumber numberWithFloat:[f floatValue] - 2.1];
+    self.displayModel.forwardValue = f;
 
     [self performSelector:@selector(randomValue) withObject:nil afterDelay:2];
 }

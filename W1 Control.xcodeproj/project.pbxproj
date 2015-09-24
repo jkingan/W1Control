@@ -17,6 +17,12 @@
 		82634D3F1BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
 		82634D401BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
 		82634D411BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
+		8269C4271BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
+		8269C4281BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
+		8269C4291BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
+		8269C42D1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
+		8269C42E1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
+		8269C42F1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +60,10 @@
 		82634D311BB1EBC20004D14C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		82634D3D1BB1ED6C0004D14C /* WODisplayModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WODisplayModel.h; sourceTree = "<group>"; };
 		82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WODisplayModel.m; sourceTree = "<group>"; };
+		8269C4251BB2601C00074C19 /* WOSerialControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOSerialControl.h; sourceTree = "<group>"; };
+		8269C4261BB2601C00074C19 /* WOSerialControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOSerialControl.m; sourceTree = "<group>"; };
+		8269C42B1BB2FB3300074C19 /* WOResponseHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOResponseHandler.h; sourceTree = "<group>"; };
+		8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOResponseHandler.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +124,10 @@
 				82634D101BB1EBC20004D14C /* Supporting Files */,
 				82634D3D1BB1ED6C0004D14C /* WODisplayModel.h */,
 				82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */,
+				8269C4251BB2601C00074C19 /* WOSerialControl.h */,
+				8269C4261BB2601C00074C19 /* WOSerialControl.m */,
+				8269C42B1BB2FB3300074C19 /* WOResponseHandler.h */,
+				8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */,
 			);
 			path = "W1 Control";
 			sourceTree = "<group>";
@@ -275,8 +289,10 @@
 			files = (
 				82634D3F1BB1ED6C0004D14C /* WODisplayModel.m in Sources */,
 				82634D151BB1EBC20004D14C /* ViewController.m in Sources */,
+				8269C4271BB2601C00074C19 /* WOSerialControl.m in Sources */,
 				82634D121BB1EBC20004D14C /* main.m in Sources */,
 				82634D0F1BB1EBC20004D14C /* AppDelegate.m in Sources */,
+				8269C42D1BB2FB3300074C19 /* WOResponseHandler.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +301,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				82634D401BB1ED6C0004D14C /* WODisplayModel.m in Sources */,
+				8269C42E1BB2FB3300074C19 /* WOResponseHandler.m in Sources */,
+				8269C4281BB2601C00074C19 /* WOSerialControl.m in Sources */,
 				82634D251BB1EBC20004D14C /* W1_ControlTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -294,6 +312,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				82634D411BB1ED6C0004D14C /* WODisplayModel.m in Sources */,
+				8269C42F1BB2FB3300074C19 /* WOResponseHandler.m in Sources */,
+				8269C4291BB2601C00074C19 /* WOSerialControl.m in Sources */,
 				82634D301BB1EBC20004D14C /* W1_ControlUITests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -411,7 +431,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "W1 Control/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.octal52.w1control;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kg7nux.w1control;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -423,7 +444,8 @@
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "W1 Control/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.octal52.w1control;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_BUNDLE_IDENTIFIER = org.kg7nux.w1control;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

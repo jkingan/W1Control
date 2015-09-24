@@ -9,9 +9,13 @@
 #import <Cocoa/Cocoa.h>
 
 @class WODisplayModel;
+@class WOResponseHandler;
+@class WOSerialControl;
 
 @interface ViewController : NSViewController
 
-@property (assign) IBOutlet WODisplayModel * displayModel;
+@property (retain) IBOutlet WODisplayModel * displayModel;
+@property (retain) IBOutlet WOResponseHandler * responseHandler;
+@property (retain) IBOutlet WOSerialControl * serialControl;
 @end
 
