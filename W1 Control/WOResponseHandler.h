@@ -3,7 +3,7 @@
 //  W1 Control
 //
 //  Created by Jason Kingan on 9/23/15.
-//  Copyright © 2015 Octal 52. All rights reserved.
+//  Copyright © 2015 Jason Kingan, KG7NUX. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
