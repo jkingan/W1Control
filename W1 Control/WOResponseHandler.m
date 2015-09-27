@@ -12,7 +12,7 @@
 
 NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
-#define CHECK_LENGTH(_response, _responseLength) {if([_response length] != _responseLength) { NSLog(@"%s: response [%@] is not correct length of %d",__FUNCTION__, _response, _responseLength); return false;}}
+#define CHECK_LENGTH(_response, _responseLength) { if([_response length] != _responseLength) { NSLog(@"%s: response [%@] is not correct length of %d", __FUNCTION__, _response, _responseLength); return false; } }
 
 @implementation WOResponseHandler
 
@@ -23,7 +23,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return self;
 }
 
--(id)initWithDisplayModel:(WODisplayModel*)displayModel
+-(id)initWithDisplayModel:(WODisplayModel *)displayModel
 {
     self = [super init];
 
@@ -43,25 +43,25 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
--(void)responseReceived:(NSNotification*)responseNotification
+-(void)responseReceived:(NSNotification *)responseNotification
 {
     NSString * response = [responseNotification object];
 
     [self parseResponse:response];
 }
 
--(BOOL)parseResponse:(NSString*)response
+-(BOOL)parseResponse:(NSString *)response
 {
     if(nil == response || [response length] < 4 || NO == [response hasSuffix:@";"]) {
         return false;
     }
 
-    NSLog(@"%s: Handling [%@]",__FUNCTION__, response);
+    NSLog(@"%s: Handling [%@]", __FUNCTION__, response);
 
     BOOL returnCode = false;
     char firstChar = [response characterAtIndex:0];
 
-    switch (firstChar) {
+    switch(firstChar) {
         case 'A':
             returnCode = [self handleAutorange:response];
             break;
@@ -116,7 +116,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return (c == 'S' ? 0 : (c == 'M' ? 1 : 2));
 }
 
--(BOOL)handleUserSettings:(NSString*)response
+-(BOOL)handleUserSettings:(NSString *)response
 {
     CHECK_LENGTH(response, 7);
 
@@ -128,7 +128,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return true;
 }
 
--(BOOL)handleAutorange:(NSString*)response
+-(BOOL)handleAutorange:(NSString *)response
 {
     CHECK_LENGTH(response, 3);
 
@@ -139,7 +139,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return true;
 }
 
--(BOOL)handleVersion:(NSString*)response
+-(BOOL)handleVersion:(NSString *)response
 {
     CHECK_LENGTH(response, 6);
 
@@ -148,7 +148,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return true;
 }
 
--(BOOL)handleForwardGraph:(NSString*)response
+-(BOOL)handleForwardGraph:(NSString *)response
 {
     CHECK_LENGTH(response, 5);
 
@@ -159,7 +159,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return true;
 }
 
--(BOOL)handleReverseGraph:(NSString*)response
+-(BOOL)handleReverseGraph:(NSString *)response
 {
     CHECK_LENGTH(response, 5);
 
@@ -170,22 +170,22 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return true;
 }
 
--(BOOL)handleForwardPower:(NSString*)response
+-(BOOL)handleForwardPower:(NSString *)response
 {
     CHECK_LENGTH(response, 6);
 
-    float forwardPower = [[response substringWithRange:NSMakeRange(1,4)] floatValue];
+    float forwardPower = [[response substringWithRange:NSMakeRange(1, 4)] floatValue];
 
     self.displayModel.forwardValue = [NSNumber numberWithFloat:forwardPower];
 
     return true;
 }
 
--(BOOL)handleReversePower:(NSString*)response
+-(BOOL)handleReversePower:(NSString *)response
 {
     CHECK_LENGTH(response, 6);
 
-    float reversePower = [[response substringWithRange:NSMakeRange(1,4)] floatValue];
+    float reversePower = [[response substringWithRange:NSMakeRange(1, 4)] floatValue];
 
     self.displayModel.reverseValue = [NSNumber numberWithFloat:reversePower];
 

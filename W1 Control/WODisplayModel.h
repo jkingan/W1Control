@@ -49,7 +49,7 @@
 @property (nonatomic, copy) NSImage * connectedImage;
 
 @property (nonatomic, assign) BOOL automaticRanging;
-@property (nonatomic, assign) int  currentRange;
+@property (nonatomic, assign) int currentRange;
 
 @property (nonatomic, assign) int rangeDropRate;
 @property (nonatomic, assign) int rangeDropRateNoUpdate;

@@ -13,7 +13,8 @@
 @end
 
 @implementation AppDelegate
-- (BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication {
+-(BOOL)applicationShouldTerminateAfterLastWindowClosed:(NSApplication *)theApplication
+{
     return YES;
 }
 @end

@@ -35,8 +35,8 @@ extern NSString * kWOSerialControlScanningNotification;
 @property (nonatomic, assign) WOSerialControlState serialControlState;
 @property (nonatomic, readonly) NSArray * serialPortList;
 
--(BOOL)pushCommand:(NSString*)command;
+-(BOOL)pushCommand:(NSString *)command;
 
--(void)scanSerialPortListForW1:(NSArray*)portList;
+-(void)scanSerialPortListForW1:(NSArray *)portList;
 -(IBAction)scanAllSerialPorts:(id)sender;
 @end

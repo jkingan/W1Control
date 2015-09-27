@@ -11,7 +11,7 @@
 #import "WOSerialControl.h"
 
 #define WODisplayModelAverage 0
-#define WODisplayModelPEP 1
+#define WODisplayModelPEP     1
 
 @implementation WODisplayModel
 
@@ -43,7 +43,7 @@
     if(tempArray) {
         _updateIndexIntervals = tempArray;
     } else {
-        _updateIndexIntervals = @[ @0.25f, @0.5f, @1.0f, @2.0f, @5.0f];
+        _updateIndexIntervals = @[@0.25f, @0.5f, @1.0f, @2.0f, @5.0f];
     }
 
     tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"updateIntervalIndex"];
@@ -64,47 +64,47 @@
     return self;
 }
 
--(NSArray*)updateIndexInterval
+-(NSArray *)updateIndexInterval
 {
     return _updateIndexIntervals;
 }
 
--(NSString*)updateIndexInterval_0
+-(NSString *)updateIndexInterval_0
 {
     return [[_updateIndexIntervals objectAtIndex:0] stringValue];
 }
 
--(NSString*)updateIndexInterval_1
+-(NSString *)updateIndexInterval_1
 {
     return [[_updateIndexIntervals objectAtIndex:1] stringValue];
 }
--(NSString*)updateIndexInterval_2
+-(NSString *)updateIndexInterval_2
 {
     return [[_updateIndexIntervals objectAtIndex:2] stringValue];
 }
--(NSString*)updateIndexInterval_3
+-(NSString *)updateIndexInterval_3
 {
     return [[_updateIndexIntervals objectAtIndex:3] stringValue];
 }
--(NSString*)updateIndexInterval_4
+-(NSString *)updateIndexInterval_4
 {
     return [[_updateIndexIntervals objectAtIndex:4] stringValue];
 }
 
--(void)applicationWillTerminate:(NSNotification*)notification
+-(void)applicationWillTerminate:(NSNotification *)notification
 {
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:self.automaticRanging] forKey:@"automaticRanging"];
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:self.writeSettingsToFlash] forKey:@"writeSettingsToFlash"];
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:self.updateIntervalIndex] forKey:@"updateIntervalIndex"];
 }
 
--(void)setScanningMode:(NSNotification*)notification
+-(void)setScanningMode:(NSNotification *)notification
 {
     self.isConnected = NO;
     self.connectedImage = [NSImage imageNamed:@"Scanning"];
 }
 
--(void)setConnectedMode:(NSNotification*)notification
+-(void)setConnectedMode:(NSNotification *)notification
 {
     self.isConnected = YES;
     [self.serialControl pushCommand:@"X"];
@@ -116,7 +116,7 @@
     [self performSelector:@selector(updateDisplay) withObject:nil afterDelay:self.updateInterval];
 }
 
--(void)setDisconnectedMode:(NSNotification*)notification
+-(void)setDisconnectedMode:(NSNotification *)notification
 {
     self.isConnected = NO;
     [[NSRunLoop mainRunLoop] cancelPerformSelector:@selector(updateDisplay) target:self argument:nil];
@@ -146,7 +146,7 @@
     _updateIntervalIndex = updateIntervalIndex;
 }
 
--(NSString*)wattLabel:(NSNumber *) value
+-(NSString *)wattLabel:(NSNumber *)value
 {
     NSNumberFormatter * nf = [[NSNumberFormatter alloc] init];
 
@@ -162,22 +162,22 @@
     return [NSString stringWithFormat:@"%.1f W", [value floatValue]];
 }
 
--(NSString*)forwardMinLabel
+-(NSString *)forwardMinLabel
 {
     return [self wattLabel:self.forwardMinValue];
 }
 
--(NSString*)forwardMidLabel
+-(NSString *)forwardMidLabel
 {
     return [self wattLabel:[NSNumber numberWithInt:([self.forwardMaxValue intValue] - [self.forwardMinValue intValue]) / 2]];
 }
 
--(NSString*)forwardMaxLabel
+-(NSString *)forwardMaxLabel
 {
     return [self wattLabel:self.forwardMaxValue];
 }
 
--(NSNumber*)forwardMaxValue
+-(NSNumber *)forwardMaxValue
 {
     return [NSNumber numberWithFloat:_forwardMaxValue];
 }
@@ -210,17 +210,17 @@
     [self didChangeValueForKey:@"reverseMidLabel"];
 }
 
--(NSNumber*)forwardMinValue
+-(NSNumber *)forwardMinValue
 {
     return [NSNumber numberWithFloat:_forwardMinValue];
 }
 
--(NSString*)forwardValueLabel
+-(NSString *)forwardValueLabel
 {
-    return [self wattLabel: self.forwardValue];
+    return [self wattLabel:self.forwardValue];
 }
 
--(NSNumber*)forwardValue
+-(NSNumber *)forwardValue
 {
     return [NSNumber numberWithFloat:_forwardValue];
 }
@@ -276,7 +276,7 @@
     [self saveSettingsToFlash];
 }
 
--(void)setForwardValue:(NSNumber*)forwardValue;
+-(void)setForwardValue:(NSNumber *)forwardValue;
 {
     _forwardValue = [forwardValue floatValue];
     [self swrChanged];
@@ -300,27 +300,27 @@
     [self saveSettingsToFlash];
 }
 
--(NSString*)reverseMinLabel
+-(NSString *)reverseMinLabel
 {
     return [self wattLabel:self.reverseMinValue];
 }
 
--(NSString*)reverseMidLabel
+-(NSString *)reverseMidLabel
 {
     return [self wattLabel:[NSNumber numberWithInt:([self.reverseMaxValue intValue] - [self.reverseMinValue intValue]) / 2]];
 }
 
--(NSString*)reverseMaxLabel
+-(NSString *)reverseMaxLabel
 {
     return [self wattLabel:self.reverseMaxValue];
 }
 
--(NSNumber*)reverseMaxValue
+-(NSNumber *)reverseMaxValue
 {
     return [NSNumber numberWithFloat:_reverseMaxValue];
 }
 
--(NSNumber*)reverseMinValue
+-(NSNumber *)reverseMinValue
 {
     return [NSNumber numberWithFloat:_reverseMinValue];
 }
@@ -341,7 +341,7 @@
     [self didChangeValueForKey:@"reverseMinLabel"];
 }
 
--(NSString*)swrLabel
+-(NSString *)swrLabel
 {
     float swr = [self.swrValue floatValue];
 
@@ -352,12 +352,12 @@
     return [NSString stringWithFormat:@"%.01f", swr];
 }
 
--(NSString*)reverseValueLabel
+-(NSString *)reverseValueLabel
 {
     return [self wattLabel:self.reverseValue];
 }
 
--(void)setReverseValue:(NSNumber*)reverseValue;
+-(void)setReverseValue:(NSNumber *)reverseValue;
 {
     _reverseValue = [reverseValue floatValue];
     [self swrChanged];
@@ -365,19 +365,19 @@
     [self didChangeValueForKey:@"reverseValueLabel"];
 }
 
--(NSNumber*)reverseValue
+-(NSNumber *)reverseValue
 {
     return [NSNumber numberWithFloat:_reverseValue];
 }
 
 
--(NSNumber*)swrValue
+-(NSNumber *)swrValue
 {
     float forward = [self.forwardValue floatValue];
     float reverse = [self.reverseValue floatValue];
 
-    float rho = sqrtf( reverse / forward );
-    float swr = (1+rho) / (1-rho);
+    float rho = sqrtf(reverse / forward);
+    float swr = (1 + rho) / (1 - rho);
 
     if(swr < 1.0) {
         swr = 0;

@@ -172,7 +172,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(void)gotTestResponse
 {
-    NSLog(@"%s",__FUNCTION__);
+    NSLog(@"%s", __FUNCTION__);
 
     [self flushCommandQueue];
     [self setConnectedStatus];
@@ -266,7 +266,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     }
 
     _serialHandle = [[NSFileHandle alloc] initWithFileDescriptor:_serialDescriptor closeOnDealloc:NO];
-    
+
     return true;
 }
 
