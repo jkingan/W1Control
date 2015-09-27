@@ -513,13 +513,13 @@
                                 </connections>
                             </imageView>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="kac-c5-D0X">
-                                <rect key="frame" x="129" y="240" width="205" height="24"/>
+                                <rect key="frame" x="129" y="240" width="142" height="24"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="DEL-Ps-21H">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Low" width="66"/>
-                                        <segment label="Med" width="66" selected="YES" tag="1"/>
-                                        <segment label="High" width="65"/>
+                                        <segment label="Low" width="45"/>
+                                        <segment label="Med" width="45" selected="YES" tag="1"/>
+                                        <segment label="High" width="44"/>
                                     </segments>
                                     <connections>
                                         <binding destination="nSc-6Q-YYQ" name="enabled" keyPath="automaticRanging" id="nw5-0S-Nt5">
@@ -539,12 +539,12 @@
                                 </connections>
                             </segmentedControl>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BDy-vi-BDl">
-                                <rect key="frame" x="129" y="211" width="71" height="24"/>
+                                <rect key="frame" x="129" y="211" width="95" height="24"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="u5a-iM-2yE">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Avg" width="32"/>
-                                        <segment label="PEP" width="32" selected="YES" tag="1"/>
+                                        <segment label="Avg" width="44"/>
+                                        <segment label="PEP" width="44" selected="YES" tag="1"/>
                                     </segments>
                                 </segmentedCell>
                                 <connections>
@@ -561,12 +561,12 @@
                                 </textFieldCell>
                             </textField>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="lie-OG-WXa">
-                                <rect key="frame" x="129" y="153" width="119" height="24"/>
+                                <rect key="frame" x="129" y="153" width="142" height="24"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="13q-VD-GQL">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Avg" width="32"/>
-                                        <segment label="Med" width="32" selected="YES" tag="1"/>
+                                        <segment label="Slow" width="44"/>
+                                        <segment label="Med" width="43" selected="YES" tag="1"/>
                                         <segment label="Fast"/>
                                     </segments>
                                 </segmentedCell>
@@ -584,12 +584,12 @@
                                 </textFieldCell>
                             </textField>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fe0-CL-XyZ">
-                                <rect key="frame" x="129" y="126" width="119" height="24"/>
+                                <rect key="frame" x="129" y="126" width="142" height="24"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Pis-Eb-2TV">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Avg" width="32"/>
-                                        <segment label="Med" width="32" selected="YES" tag="1"/>
+                                        <segment label="Slow" width="44"/>
+                                        <segment label="Med" width="43" selected="YES" tag="1"/>
                                         <segment label="Fast"/>
                                     </segments>
                                 </segmentedCell>
@@ -607,12 +607,12 @@
                                 </textFieldCell>
                             </textField>
                             <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GYF-Qu-WM3">
-                                <rect key="frame" x="129" y="182" width="71" height="24"/>
+                                <rect key="frame" x="129" y="182" width="95" height="24"/>
                                 <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="Bnr-Zs-Ltm">
                                     <font key="font" metaFont="system"/>
                                     <segments>
-                                        <segment label="Avg" width="32"/>
-                                        <segment label="PEP" width="32" selected="YES" tag="1"/>
+                                        <segment label="Avg" width="44"/>
+                                        <segment label="PEP" width="44" selected="YES" tag="1"/>
                                     </segments>
                                 </segmentedCell>
                                 <connections>
@@ -657,8 +657,8 @@
                                 </connections>
                             </button>
                             <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yQO-9w-LaH">
-                                <rect key="frame" x="138" y="74" width="255" height="26"/>
-                                <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="5" doubleValue="1.4375" tickMarkPosition="above" numberOfTickMarks="5" allowsTickMarkValuesOnly="YES" sliderType="linear" id="RP4-vh-8HE">
+                                <rect key="frame" x="138" y="74" width="255" height="25"/>
+                                <sliderCell key="cell" state="on" alignment="left" minValue="1" maxValue="5" doubleValue="1" tickMarkPosition="above" numberOfTickMarks="5" allowsTickMarkValuesOnly="YES" sliderType="linear" id="RP4-vh-8HE">
                                     <connections>
                                         <binding destination="nSc-6Q-YYQ" name="value" keyPath="updateIntervalIndex" id="XIW-H9-whh"/>
                                     </connections>
@@ -763,14 +763,14 @@
                                     </menu>
                                 </popUpButtonCell>
                                 <connections>
-                                    <binding destination="HQV-Ws-AJW" name="content" keyPath="serialPortList" id="YwX-PU-6mb"/>
-                                    <binding destination="HQV-Ws-AJW" name="contentValues" keyPath="serialPortList" previousBinding="YwX-PU-6mb" id="Umk-vs-k7g"/>
                                     <binding destination="HQV-Ws-AJW" name="selectedValue" keyPath="serialPort" previousBinding="Umk-vs-k7g" id="RwK-3t-qVE">
                                         <dictionary key="options">
                                             <string key="NSNoSelectionPlaceholder">Select Serial Port</string>
                                             <string key="NSNullPlaceholder">Select Serial Port</string>
                                         </dictionary>
                                     </binding>
+                                    <binding destination="HQV-Ws-AJW" name="contentValues" keyPath="serialPortList" previousBinding="YwX-PU-6mb" id="Umk-vs-k7g"/>
+                                    <binding destination="HQV-Ws-AJW" name="content" keyPath="serialPortList" id="YwX-PU-6mb"/>
                                 </connections>
                             </popUpButton>
                         </subviews>
@@ -796,7 +796,7 @@
                 </customObject>
                 <userDefaultsController representsSharedInstance="YES" id="lwX-OD-WCY"/>
             </objects>
-            <point key="canvasLocation" x="276.5" y="776.5"/>
+            <point key="canvasLocation" x="506.5" y="823.5"/>
         </scene>
     </scenes>
     <resources>

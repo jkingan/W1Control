@@ -10,6 +10,9 @@
 #import "WODisplayModel.h"
 #import "WOSerialControl.h"
 
+#define WODisplayModelAverage 0
+#define WODisplayModelPEP 1
+
 @implementation WODisplayModel
 
 -(id)init
@@ -50,7 +53,7 @@
         self.updateIntervalIndex = 0;
     }
 
-    self.updateInterval = [[_updateIndexIntervals objectAtIndex:self.updateIntervalIndex] floatValue];
+    self.updateInterval = [[_updateIndexIntervals objectAtIndex:self.updateIntervalIndex - 1] floatValue];
 
     tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"updateInterval"];
     if(tempNumber) {
@@ -105,6 +108,7 @@
 {
     self.isConnected = YES;
     [self.serialControl pushCommand:@"X"];
+    [self updateRanging];
     [self updateDisplay];
 
     self.connectedImage = [NSImage imageNamed:@"Connected"];
@@ -138,7 +142,7 @@
 
 -(void)setUpdateIntervalIndex:(int)updateIntervalIndex
 {
-    self.updateInterval = [[_updateIndexIntervals objectAtIndex:updateIntervalIndex] floatValue];
+    self.updateInterval = [[_updateIndexIntervals objectAtIndex:updateIntervalIndex - 1] floatValue];
     _updateIntervalIndex = updateIntervalIndex;
 }
 
@@ -221,12 +225,79 @@
     return [NSNumber numberWithFloat:_forwardValue];
 }
 
+-(void)saveSettingsToFlash
+{
+    if(self.writeSettingsToFlash) {
+        [self.serialControl pushCommand:@"W"];
+    }
+}
+
+-(void)setLedTypeNoUpdate:(int)ledType
+{
+    [self willChangeValueForKey:@"ledType"];
+    _ledType = ledType;
+    [self didChangeValueForKey:@"ledType"];
+}
+
+-(void)setLedType:(int)ledType
+{
+    [self setLedTypeNoUpdate:ledType];
+    [self.serialControl pushCommand:@"M"];
+    [self saveSettingsToFlash];
+}
+
+-(void)setSerialTypeNoUpdate:(int)serialType
+{
+    [self willChangeValueForKey:@"serialType"];
+    _serialType = serialType;
+    [self didChangeValueForKey:@"serialType"];
+}
+
+-(void)setSerialType:(int)serialType
+{
+    [self setSerialTypeNoUpdate:serialType];
+    [self.serialControl pushCommand:@"N"];
+    [self saveSettingsToFlash];
+}
+
+-(void)setLedDecayRateNoUpdate:(int)ledDecayRateNoUpdate
+{
+    [self willChangeValueForKey:@"ledDecayRate"];
+    _ledDecayRate = ledDecayRateNoUpdate;
+    [self didChangeValueForKey:@"ledDecayRate"];
+}
+
+-(void)setLedDecayRate:(int)ledDecayRate
+{
+    [self setLedDecayRateNoUpdate:ledDecayRate];
+    unichar commandChar = '4' + ledDecayRate;
+    NSString * command = [NSString stringWithCharacters:&commandChar length:1];
+    [self.serialControl pushCommand:command];
+    [self saveSettingsToFlash];
+}
+
 -(void)setForwardValue:(NSNumber*)forwardValue;
 {
     _forwardValue = [forwardValue floatValue];
     [self swrChanged];
     [self willChangeValueForKey:@"forwardValueLabel"];
     [self didChangeValueForKey:@"forwardValueLabel"];
+}
+
+-(void)setRangeDropRateNoUpdate:(int)rangeDropRateNoUpdate
+{
+    [self willChangeValueForKey:@"rangeDropRate"];
+    _rangeDropRate = rangeDropRateNoUpdate;
+    [self didChangeValueForKey:@"rangeDropRate"];
+}
+
+-(void)setRangeDropRate:(int)rangeDropRate
+{
+    [self setRangeDropRateNoUpdate:rangeDropRate];
+    unichar commandChar = '7' + rangeDropRate;
+    NSString * command = [NSString stringWithCharacters:&commandChar length:1];
+    [self.serialControl pushCommand:command];
+    [self saveSettingsToFlash];
 }
 
 -(NSString*)reverseMinLabel
@@ -322,6 +393,31 @@
 
     [self didChangeValueForKey:@"swrLabel"];
     [self didChangeValueForKey:@"swrValue"];
+}
+
+-(void)setAutomaticRanging:(BOOL)automaticRanging
+{
+    _automaticRanging = automaticRanging;
+    [self updateRanging];
+}
+
+-(void)updateRanging
+{
+    if(self.automaticRanging) {
+        [self.serialControl pushCommand:@"0"];
+    } else {
+        unichar commandChar = '1' + self.currentRange;
+        NSString * command = [NSString stringWithCharacters:&commandChar length:1];
+        [self.serialControl pushCommand:command];
+    }
+    [self.serialControl pushCommand:@"B"];
+    [self.serialControl pushCommand:@"C"];
+}
+
+-(void)setCurrentRange:(int)currentRange
+{
+    _currentRange = currentRange;
+    [self updateRanging];
 }
 
 @end

@@ -80,7 +80,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(BOOL)pushCommand:(NSString *)command
 {
-    if(nil == command || (self.serialControlState != WOSerialControlIdle || self.serialControlState != WOSerialControlWaiting)) {
+    if(nil == command || (self.serialControlState != WOSerialControlIdle && self.serialControlState != WOSerialControlWaiting)) {
         return false;
     }
 
@@ -123,12 +123,14 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
     _serialSettings.c_cc[VMIN] = 1;
     _serialSettings.c_cc[VTIME] = RESPONSE_TIMEOUT;
-    _serialSettings.c_cflag = 0;
     _serialSettings.c_iflag = 0;
     _serialSettings.c_oflag = 0;
+    _serialSettings.c_cflag |=  CS8;                // Select 8 data bits
+    _serialSettings.c_iflag |= INPCK;
 
-    cfsetspeed(&_serialSettings, 9600);
-    _serialSettings.c_cflag |= CS8;
+    cfsetispeed(&_serialSettings, B9600);
+    cfsetospeed(&_serialSettings, B9600);
+    cfsetspeed(&_serialSettings, B9600);
 
     if(tcsetattr(_serialDescriptor, TCSANOW, &_serialSettings) == -1) {
         NSLog(@"%s: tcsetattr on %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
@@ -170,7 +172,8 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(void)gotTestResponse
 {
-    [[NSRunLoop mainRunLoop] cancelPerformSelector:@selector(gotNoResponse) target:self argument:nil];
+    NSLog(@"%s",__FUNCTION__);
+
     [self flushCommandQueue];
     [self setConnectedStatus];
 }
@@ -180,7 +183,11 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     NSLog(@"%s: Received no response from port [%@]", __FUNCTION__, self.serialPort);
     self.serialPort = nil;
     [self closeSerialPort];
-    [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
+    if(self.serialControlState == WOSerialControlScanning) {
+        [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
+    } else {
+        [self setDisconnectedStatus];
+    }
 }
 
 -(void)checkNextSerialPort
@@ -210,7 +217,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
         // Try to get the version number
         [self sendCommand:@"V"];
         [_serialHandle waitForDataInBackgroundAndNotify];
-        [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
+        NSLog(@"Scheduling gotNoREsponse");
     } else {
         [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
     }
@@ -242,7 +249,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     [self closeSerialPort];
     [self flushCommandQueue];
 
-    int newDescriptor = open([port UTF8String], O_RDWR);
+    int newDescriptor = open([port UTF8String], O_RDWR | O_NONBLOCK);
 
     if(newDescriptor < 0) {
         NSLog(@"%s: open of %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
@@ -259,7 +266,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     }
 
     _serialHandle = [[NSFileHandle alloc] initWithFileDescriptor:_serialDescriptor closeOnDealloc:NO];
-
+    
     return true;
 }
 
@@ -293,21 +300,25 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     }
 
     NSData * newData;
-    while([_serialHandle availableData]) {
-        @try {
-            newData = [_serialHandle readDataOfLength:30];
+
+    @try {
+        newData = [_serialHandle availableData];
+        if([newData length]) {
             [_commandResponse appendData:newData];
         }
-        @catch(NSException * exception) {
-            [self closeSerialPort];
-            return nil;
-        }
+    }
+    @catch(NSException * e) {
     }
 
     NSString * response = [[NSString alloc] initWithData:_commandResponse encoding:NSUTF8StringEncoding];
+
+    [_serialHandle waitForDataInBackgroundAndNotify];
+
     if([response hasSuffix:@";"]) {
+        _commandResponse = nil;
         // No W1 response is less than three characters
         if([response length] >= 3) {
+            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(gotNoResponse) object:nil];
             return response;
         }
     }
@@ -335,6 +346,8 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     if(_serialDescriptor < 1 || [command length] != 1 || nil == _serialHandle) {
         return false;
     }
+
+    [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
 
     [_serialHandle writeData:[command dataUsingEncoding:NSUTF8StringEncoding]];
 

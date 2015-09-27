@@ -25,7 +25,7 @@
 
 -(void)viewDidAppear
 {
-    [self performSelector:@selector(randomValue) withObject:nil afterDelay:0];
+//    [self performSelector:@selector(randomValue) withObject:nil afterDelay:0];
 }
 
 -(void)viewDidDisappear

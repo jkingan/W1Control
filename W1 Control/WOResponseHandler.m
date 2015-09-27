@@ -56,6 +56,8 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
         return false;
     }
 
+    NSLog(@"%s: Handling [%@]",__FUNCTION__, response);
+
     BOOL returnCode = false;
     char firstChar = [response characterAtIndex:0];
 
@@ -70,13 +72,16 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
             returnCode = [self handleForwardPower:response];
             break;
         case 'R':
-            returnCode = [self handleForwardPower:response];
+            returnCode = [self handleReversePower:response];
             break;
         case 'B':
             returnCode = [self handleForwardGraph:response];
             break;
         case 'C':
             returnCode = [self handleReverseGraph:response];
+            break;
+        case 'X':
+            returnCode = [self handleUserSettings:response];
             break;
         default:
             break;
@@ -97,6 +102,28 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     } else {
         return false;
     }
+
+    return true;
+}
+
+-(int)averageOrPeak:(char)c
+{
+    return (c == 'A' ? 0 : 1);
+}
+
+-(int)slowMediumOrFast:(char)c
+{
+    return (c == 'S' ? 0 : (c == 'M' ? 1 : 2));
+}
+
+-(BOOL)handleUserSettings:(NSString*)response
+{
+    CHECK_LENGTH(response, 7);
+
+    self.displayModel.ledTypeNoUpdate = [self averageOrPeak:[response characterAtIndex:1]];
+    self.displayModel.serialTypeNoUpdate = [self averageOrPeak:[response characterAtIndex:2]];
+    self.displayModel.ledDecayRateNoUpdate = [self slowMediumOrFast:[response characterAtIndex:3]];
+    self.displayModel.rangeDropRateNoUpdate = [self slowMediumOrFast:[response characterAtIndex:4]];
 
     return true;
 }
@@ -123,7 +150,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
 -(BOOL)handleForwardGraph:(NSString*)response
 {
-    CHECK_LENGTH(response, 6);
+    CHECK_LENGTH(response, 5);
 
     char range = [response characterAtIndex:1];
 
@@ -134,7 +161,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
 -(BOOL)handleReverseGraph:(NSString*)response
 {
-    CHECK_LENGTH(response, 6);
+    CHECK_LENGTH(response, 5);
 
     char range = [response characterAtIndex:1];
 

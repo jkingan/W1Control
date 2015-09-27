@@ -52,9 +52,13 @@
 @property (nonatomic, assign) int  currentRange;
 
 @property (nonatomic, assign) int rangeDropRate;
+@property (nonatomic, assign) int rangeDropRateNoUpdate;
 @property (nonatomic, assign) int ledDecayRate;
+@property (nonatomic, assign) int ledDecayRateNoUpdate;
 @property (nonatomic, assign) int ledType;
+@property (nonatomic, assign) int ledTypeNoUpdate;
 @property (nonatomic, assign) int serialType;
+@property (nonatomic, assign) int serialTypeNoUpdate;
 
 @property (nonatomic, assign) BOOL writeSettingsToFlash;
 
