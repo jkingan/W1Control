@@ -172,15 +172,12 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(void)gotTestResponse
 {
-    NSLog(@"%s", __FUNCTION__);
-
     [self flushCommandQueue];
     [self setConnectedStatus];
 }
 
 -(void)gotNoResponse
 {
-    NSLog(@"%s: Received no response from port [%@]", __FUNCTION__, self.serialPort);
     self.serialPort = nil;
     [self closeSerialPort];
     if(self.serialControlState == WOSerialControlScanning) {
@@ -193,7 +190,6 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 -(void)checkNextSerialPort
 {
     if(0 == [_serialPortList count]) {
-        NSLog(@"%s: No more ports to check", __FUNCTION__);
         [self setDisconnectedStatus];
         _serialPortList = nil;
         return;
@@ -208,16 +204,12 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
     [_serialPortList removeLastObject];
 
-
-    NSLog(@"%s: Trying for response from port [%@]", __FUNCTION__, self.serialPort);
-
     BOOL returnCode = [self openSerialPort:self.serialPort];
 
     if(returnCode) {
         // Try to get the version number
         [self sendCommand:@"V"];
         [_serialHandle waitForDataInBackgroundAndNotify];
-        NSLog(@"Scheduling gotNoREsponse");
     } else {
         [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
     }
