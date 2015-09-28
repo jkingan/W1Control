@@ -50,7 +50,7 @@
     if(tempNumber) {
         self.updateIntervalIndex = [tempNumber intValue];
     } else {
-        self.updateIntervalIndex = 0;
+        self.updateIntervalIndex = 1;
     }
 
     self.updateInterval = [[_updateIndexIntervals objectAtIndex:self.updateIntervalIndex - 1] floatValue];
