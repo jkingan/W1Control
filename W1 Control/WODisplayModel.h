@@ -18,10 +18,7 @@
     float _forwardMinValue;
     float _reverseMaxValue;
     float _reverseMinValue;
-    int _updateIntervalIndex;
-    NSArray * _updateIndexIntervals;
 }
-
 
 @property (nonatomic, readonly)  NSString * forwardMinLabel;
 @property (nonatomic, readonly)  NSString * forwardMidLabel;
@@ -48,7 +45,6 @@
 @property (nonatomic, assign) BOOL isConnected;
 @property (nonatomic, copy) NSImage * connectedImage;
 
-@property (nonatomic, assign) BOOL automaticRanging;
 @property (nonatomic, assign) int currentRange;
 
 @property (nonatomic, assign) int rangeDropRate;
@@ -60,11 +56,8 @@
 @property (nonatomic, assign) int serialType;
 @property (nonatomic, assign) int serialTypeNoUpdate;
 
-@property (nonatomic, assign) BOOL writeSettingsToFlash;
-
 @property (nonatomic, assign) IBOutlet WOSerialControl * serialControl;
 @property (nonatomic, assign) float updateInterval;
-@property (nonatomic, assign) int updateIntervalIndex;
 
 @property (nonatomic, readonly) NSString * updateIndexInterval_0;
 @property (nonatomic, readonly) NSString * updateIndexInterval_1;
@@ -72,4 +65,5 @@
 @property (nonatomic, readonly) NSString * updateIndexInterval_3;
 @property (nonatomic, readonly) NSString * updateIndexInterval_4;
 
+@property (nonatomic, readonly) NSArray * updateIndexIntervals;
 @end

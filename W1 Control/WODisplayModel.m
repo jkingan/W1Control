@@ -15,6 +15,12 @@
 
 @implementation WODisplayModel
 
+static NSString * kAutomaticRanging = @"automaticRanging";
+static NSString * kWriteSettingsToFlash = @"writeSettingsToFlash";
+static NSString * kUpdateIndexIntervals = @"updateIndexIntervals";
+static NSString * kUpdateIntervalIndex  = @"updateIntervalIndex";
+static NSString * kUpdateInterval = @"updateInterval";
+
 -(id)init
 {
     self = [super init];
@@ -24,78 +30,59 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setConnectedMode:) name:kWOSerialControlConnectedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setScanningMode:) name:kWOSerialControlScanningNotification object:nil];
 
-    NSNumber * tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"automaticRanging"];
+    NSDictionary * defaults = @{kAutomaticRanging : @YES, kWriteSettingsToFlash: @YES,
+                                kUpdateIndexIntervals : @[@0.25f, @0.5f, @1.0f, @2.0f, @5.0f],
+                                kUpdateIntervalIndex : @1, kUpdateInterval : @0.0f};
 
-    if(tempNumber) {
-        self.automaticRanging = [tempNumber boolValue];
-    } else {
-        self.automaticRanging = YES;
-    }
+    [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
+    [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:kAutomaticRanging options:NSKeyValueObservingOptionNew context:nil];
+    [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:kUpdateIntervalIndex options:NSKeyValueObservingOptionNew context:nil];
 
-    tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"writeSettingsToFlash"];
-    if(tempNumber) {
-        self.writeSettingsToFlash = [tempNumber boolValue];
-    } else {
-        self.writeSettingsToFlash = YES;
-    }
-
-    NSArray * tempArray = [[NSUserDefaults standardUserDefaults] objectForKey:@"updateIndexIntervals"];
-    if(tempArray) {
-        _updateIndexIntervals = tempArray;
-    } else {
-        _updateIndexIntervals = @[@0.25f, @0.5f, @1.0f, @2.0f, @5.0f];
-    }
-
-    tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"updateIntervalIndex"];
-    if(tempNumber) {
-        self.updateIntervalIndex = [tempNumber intValue];
-    } else {
-        self.updateIntervalIndex = 1;
-    }
-
-    self.updateInterval = [[_updateIndexIntervals objectAtIndex:self.updateIntervalIndex - 1] floatValue];
-
-    tempNumber = [[NSUserDefaults standardUserDefaults] objectForKey:@"updateInterval"];
-    if(tempNumber) {
-        self.updateInterval = [tempNumber floatValue];
-    }
+    [self updateRangingValue];
+    [self updateIntervalValue];
 
     self.connectedImage = [NSImage imageNamed:@"Disconnected"];
     return self;
 }
 
--(NSArray *)updateIndexInterval
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
 {
-    return _updateIndexIntervals;
+    if([keyPath isEqualToString:kAutomaticRanging]) {
+        [self updateRangingValue];
+    } else if([keyPath isEqualToString:kUpdateIntervalIndex]) {
+        [self updateIntervalValue];
+    }
+}
+
+-(NSArray*)updateIndexIntervals
+{
+    return [[NSUserDefaults standardUserDefaults] objectForKey:kUpdateIndexIntervals];
 }
 
 -(NSString *)updateIndexInterval_0
 {
-    return [[_updateIndexIntervals objectAtIndex:0] stringValue];
+    return [[self.updateIndexIntervals objectAtIndex:0] stringValue];
 }
 
 -(NSString *)updateIndexInterval_1
 {
-    return [[_updateIndexIntervals objectAtIndex:1] stringValue];
+    return [[self.updateIndexIntervals objectAtIndex:1] stringValue];
 }
 -(NSString *)updateIndexInterval_2
 {
-    return [[_updateIndexIntervals objectAtIndex:2] stringValue];
+    return [[self.updateIndexIntervals objectAtIndex:2] stringValue];
 }
 -(NSString *)updateIndexInterval_3
 {
-    return [[_updateIndexIntervals objectAtIndex:3] stringValue];
+    return [[self.updateIndexIntervals objectAtIndex:3] stringValue];
 }
 -(NSString *)updateIndexInterval_4
 {
-    return [[_updateIndexIntervals objectAtIndex:4] stringValue];
+    return [[self.updateIndexIntervals objectAtIndex:4] stringValue];
 }
 
 -(void)applicationWillTerminate:(NSNotification *)notification
 {
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:self.automaticRanging] forKey:@"automaticRanging"];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:self.writeSettingsToFlash] forKey:@"writeSettingsToFlash"];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithInt:self.updateIntervalIndex] forKey:@"updateIntervalIndex"];
 }
 
 -(void)setScanningMode:(NSNotification *)notification
@@ -108,7 +95,7 @@
 {
     self.isConnected = YES;
     [self.serialControl pushCommand:@"X"];
-    [self updateRanging];
+    [self updateRangingValue];
     [self updateDisplay];
 
     self.connectedImage = [NSImage imageNamed:@"Connected"];
@@ -133,17 +120,6 @@
     if(self.isConnected) {
         [self performSelector:@selector(updateDisplay) withObject:nil afterDelay:self.updateInterval];
     }
-}
-
--(int)updateIntervalIndex
-{
-    return _updateIntervalIndex;
-}
-
--(void)setUpdateIntervalIndex:(int)updateIntervalIndex
-{
-    self.updateInterval = [[_updateIndexIntervals objectAtIndex:updateIntervalIndex - 1] floatValue];
-    _updateIntervalIndex = updateIntervalIndex;
 }
 
 -(NSString *)wattLabel:(NSNumber *)value
@@ -227,7 +203,7 @@
 
 -(void)saveSettingsToFlash
 {
-    if(self.writeSettingsToFlash) {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kWriteSettingsToFlash]) {
         [self.serialControl pushCommand:@"W"];
     }
 }
@@ -395,15 +371,25 @@
     [self didChangeValueForKey:@"swrValue"];
 }
 
--(void)setAutomaticRanging:(BOOL)automaticRanging
+-(float)updateInterval
 {
-    _automaticRanging = automaticRanging;
-    [self updateRanging];
+    float updateInterval = [[NSUserDefaults standardUserDefaults] floatForKey:kUpdateInterval];
+    if( updateInterval == 0) {
+        return _updateInterval;
+    } else {
+        return updateInterval;
+    }
 }
 
--(void)updateRanging
+-(void)updateIntervalValue
 {
-    if(self.automaticRanging) {
+    NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+    self.updateInterval =  [[[defaults objectForKey:kUpdateIndexIntervals] objectAtIndex:[defaults integerForKey:kUpdateIntervalIndex] - 1] floatValue];
+}
+
+-(void)updateRangingValue
+{
+    if([[NSUserDefaults standardUserDefaults]  boolForKey:kAutomaticRanging]) {
         [self.serialControl pushCommand:@"0"];
     } else {
         unichar commandChar = '1' + self.currentRange;
@@ -417,7 +403,7 @@
 -(void)setCurrentRange:(int)currentRange
 {
     _currentRange = currentRange;
-    [self updateRanging];
+    [self updateRangingValue];
 }
 
 @end
