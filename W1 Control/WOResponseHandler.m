@@ -16,6 +16,8 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
 @implementation WOResponseHandler
 
+#pragma mark Init/Dealloc
+
 -(id)init
 {
     self = [super init];
@@ -23,14 +25,9 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     return self;
 }
 
--(id)initWithDisplayModel:(WODisplayModel *)displayModel
+-(void)dealloc
 {
-    self = [super init];
-
-    self.displayModel = displayModel;
-    [self registerForNotifications];
-
-    return self;
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 -(void)registerForNotifications
@@ -38,10 +35,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(responseReceived:) name:kWOCommandResponseReceived object:nil];
 }
 
--(void)dealloc
-{
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-}
+#pragma mark Handle Responses
 
 -(void)responseReceived:(NSNotification *)responseNotification
 {
@@ -55,8 +49,6 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
     if(nil == response || [response length] < 4 || NO == [response hasSuffix:@";"]) {
         return false;
     }
-
-    NSLog(@"%s: Handling [%@]", __FUNCTION__, response);
 
     BOOL returnCode = false;
     char firstChar = [response characterAtIndex:0];

@@ -16,7 +16,6 @@ extern NSString * kWOCommandResponseReceived;
 @interface WOResponseHandler : NSObject
 {
 }
--(id)initWithDisplayModel:(WODisplayModel *)displayModel;
 
 @property (nonatomic, retain) IBOutlet WODisplayModel * displayModel;
 @property (nonatomic, retain) IBOutlet WOSerialControl * serialControl;

@@ -25,58 +25,53 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 @implementation WOSerialControl
 
+#pragma mark Init/Dealloc
+
 -(id)init
 {
     self = [super init];
+
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataAvailable:) name:NSFileHandleDataAvailableNotification object:nil];
+
+    _commandQueue = [NSMutableArray arrayWithCapacity:10];
+
+    [self setDisconnectedStatus];
 
     self.serialPort = [[NSUserDefaults standardUserDefaults] objectForKey:kSerialPort];
 
     if(!self.serialPort) {
         self.serialPort = @"";
     }
-
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(dataAvailable:) name:NSFileHandleDataAvailableNotification object:nil];
-
-    _commandQueue = [NSMutableArray arrayWithCapacity:10];
-
-    self.serialControlState = WOSerialControlDisconnected;
-
-    [self addObserver:self forKeyPath:@"serialPort" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionOld context:nil];
-
+    
     return self;
-}
-
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
-{
-    if([keyPath isEqualToString:@"serialPort"]) {
-
-        if(self.serialControlState == WOSerialControlScanning) {
-            return;
-        }
-
-        NSString * oldValue = [change objectForKey:NSKeyValueChangeOldKey];
-        NSString * newValue = [change objectForKey:NSKeyValueChangeNewKey];
-
-        if([oldValue isKindOfClass:[NSNull class]] || nil == oldValue) {
-            oldValue = @"";
-        }
-
-        if([newValue isKindOfClass:[NSNull class]] || nil == newValue) {
-            newValue = @"";
-        }
-
-        if(nil == newValue || [oldValue isEqualToString:newValue] || [newValue isEqualToString:@""]) {
-            return;
-        }
-
-        [self scanSerialPortListForW1:[NSArray arrayWithObject:newValue]];
-    }
 }
 
 -(void)dealloc
 {
     [[NSUserDefaults standardUserDefaults] setObject:self.serialPort forKey:kSerialPort];
 }
+
+#pragma mark Misc
+
+-(void)setSerialPort:(NSString*)serialPort
+{
+    NSString * oldSerialPort = _serialPort;
+    _serialPort = serialPort;
+
+    if(!oldSerialPort) {
+        oldSerialPort = @"";
+    }
+
+    if(!_serialPort) {
+        _serialPort = @"";
+    }
+
+    if(0 != [_serialPort length] && ![oldSerialPort isEqualToString:_serialPort] && self.serialControlState != WOSerialControlScanning) {
+        [self scanSerialPortListForW1:[NSArray arrayWithObject:_serialPort]];
+    }
+}
+
+#pragma mark Command Queue Processing
 
 -(BOOL)pushCommand:(NSString *)command
 {
@@ -113,62 +108,16 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
         [self sendCommandDispatchResponse:command];
         return true;
     }
-
+    
     return false;
 }
 
--(BOOL)setupSerial
+-(void)flushCommandQueue
 {
-    cfmakeraw(&_serialSettings);
-
-    _serialSettings.c_cc[VMIN] = 1;
-    _serialSettings.c_cc[VTIME] = RESPONSE_TIMEOUT;
-    _serialSettings.c_iflag = 0;
-    _serialSettings.c_oflag = 0;
-    _serialSettings.c_cflag |=  CS8;                // Select 8 data bits
-    _serialSettings.c_iflag |= INPCK;
-
-    cfsetispeed(&_serialSettings, B9600);
-    cfsetospeed(&_serialSettings, B9600);
-    cfsetspeed(&_serialSettings, B9600);
-
-    if(tcsetattr(_serialDescriptor, TCSANOW, &_serialSettings) == -1) {
-        NSLog(@"%s: tcsetattr on %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
-        return false;
-    }
-
-    return true;
+    [_commandQueue removeAllObjects];
 }
 
--(BOOL)closeSerialPort
-{
-    [self flushCommandQueue];
-    if(_serialDescriptor || _serialHandle) {
-        close(_serialDescriptor);
-        _commandResponse = nil;
-        _serialDescriptor = 0;
-        _serialHandle = nil;
-
-        return true;
-    }
-
-    return false;
-}
-
--(void)setConnectedStatus
-{
-    self.serialControlState = WOSerialControlIdle;
-    [self flushCommandQueue];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWOSerialControlConnectedNotification object:nil];
-}
-
--(void)setDisconnectedStatus
-{
-    self.serialControlState = WOSerialControlDisconnected;
-    [self flushCommandQueue];
-    [[NSNotificationCenter defaultCenter] postNotificationName:kWOSerialControlDisconnectedNotification object:nil];
-
-}
+#pragma mark Scan for W1 Devices
 
 -(void)gotTestResponse
 {
@@ -176,18 +125,12 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     [self setConnectedStatus];
 }
 
--(void)gotNoResponse
+-(void)checkNextSerialPort
 {
-    self.serialPort = nil;
-    [self closeSerialPort];
-    if(self.serialControlState == WOSerialControlScanning) {
-        [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
-    } else {
-        [self setDisconnectedStatus];
-    }
+    [self performSelector:@selector(_checkNextSerialPort) withObject:nil afterDelay:0];
 }
 
--(void)checkNextSerialPort
+-(void)_checkNextSerialPort
 {
     if(0 == [_serialPortList count]) {
         [self setDisconnectedStatus];
@@ -211,7 +154,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
         [self sendCommand:@"V"];
         [_serialHandle waitForDataInBackgroundAndNotify];
     } else {
-        [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
+        [self checkNextSerialPort];
     }
 }
 
@@ -228,13 +171,25 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
     _serialPortList = [NSMutableArray arrayWithArray:portList];
 
-    [self performSelector:@selector(checkNextSerialPort) withObject:nil afterDelay:0];
+    [self checkNextSerialPort];
 }
 
--(void)flushCommandQueue
+-(void)setConnectedStatus
 {
-    [_commandQueue removeAllObjects];
+    self.serialControlState = WOSerialControlIdle;
+    [self flushCommandQueue];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWOSerialControlConnectedNotification object:nil];
 }
+
+-(void)setDisconnectedStatus
+{
+    self.serialControlState = WOSerialControlDisconnected;
+    [self flushCommandQueue];
+    [[NSNotificationCenter defaultCenter] postNotificationName:kWOSerialControlDisconnectedNotification object:nil];
+
+}
+
+#pragma mark Serial Port Open and Configuration
 
 -(BOOL)openSerialPort:(NSString *)port
 {
@@ -262,6 +217,46 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     return true;
 }
 
+-(BOOL)closeSerialPort
+{
+    [self flushCommandQueue];
+    if(_serialDescriptor || _serialHandle) {
+        close(_serialDescriptor);
+        _commandResponse = nil;
+        _serialDescriptor = 0;
+        _serialHandle = nil;
+
+        return true;
+    }
+
+    return false;
+}
+
+-(BOOL)setupSerial
+{
+    cfmakeraw(&_serialSettings);
+
+    _serialSettings.c_cc[VMIN] = 1;
+    _serialSettings.c_cc[VTIME] = RESPONSE_TIMEOUT;
+    _serialSettings.c_iflag = 0;
+    _serialSettings.c_oflag = 0;
+    _serialSettings.c_cflag |=  CS8;                // Select 8 data bits
+    _serialSettings.c_iflag |= INPCK;
+
+    cfsetispeed(&_serialSettings, B9600);
+    cfsetospeed(&_serialSettings, B9600);
+    cfsetspeed(&_serialSettings, B9600);
+
+    if(tcsetattr(_serialDescriptor, TCSANOW, &_serialSettings) == -1) {
+        NSLog(@"%s: tcsetattr on %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
+        return false;
+    }
+
+    return true;
+}
+
+#pragma mark Command Send/Receive
+
 -(void)dispatchResponse:(NSString *)response
 {
     [[NSNotificationCenter defaultCenter] postNotificationName:kWOCommandResponseReceived object:response];
@@ -276,6 +271,19 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     self.serialControlState = WOSerialControlWaiting;
     [self sendCommand:command];
     [_serialHandle waitForDataInBackgroundAndNotify];
+
+    return true;
+}
+
+-(BOOL)sendCommand:(NSString *)command
+{
+    if(_serialDescriptor < 1 || [command length] != 1 || nil == _serialHandle) {
+        return false;
+    }
+
+    [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
+
+    [_serialHandle writeData:[command dataUsingEncoding:NSUTF8StringEncoding]];
 
     return true;
 }
@@ -333,17 +341,15 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     }
 }
 
--(BOOL)sendCommand:(NSString *)command
+-(void)gotNoResponse
 {
-    if(_serialDescriptor < 1 || [command length] != 1 || nil == _serialHandle) {
-        return false;
+    self.serialPort = nil;
+    [self closeSerialPort];
+    if(self.serialControlState == WOSerialControlScanning) {
+        [self checkNextSerialPort];
+    } else {
+        [self setDisconnectedStatus];
     }
-
-    [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
-
-    [_serialHandle writeData:[command dataUsingEncoding:NSUTF8StringEncoding]];
-
-    return true;
 }
 
 #pragma mark Serial Port Lister
