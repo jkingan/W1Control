@@ -8,6 +8,7 @@
 
 #import "WOSerialControl.h"
 #import "WOResponseHandler.h"
+#import "WOLogging.h"
 
 #include <CoreFoundation/CoreFoundation.h>
 
@@ -133,6 +134,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 -(void)_checkNextSerialPort
 {
     if(0 == [_serialPortList count]) {
+        WOLog(WOLOG_ANNOY,@"no more ports to check\n");
         [self setDisconnectedStatus];
         _serialPortList = nil;
         return;
@@ -199,7 +201,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     int newDescriptor = open([port UTF8String], O_RDWR | O_NONBLOCK);
 
     if(newDescriptor < 0) {
-        NSLog(@"%s: open of %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
+        WOLog(WOLOG_STATUS,@"open of %@ returned -1, %s\n",self.serialPort, strerror(errno));
         return false;
     }
 
@@ -248,7 +250,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     cfsetspeed(&_serialSettings, B9600);
 
     if(tcsetattr(_serialDescriptor, TCSANOW, &_serialSettings) == -1) {
-        NSLog(@"%s: tcsetattr on %@ returned -1, %s\n", __FUNCTION__, self.serialPort, strerror(errno));
+        WOLog(WOLOG_ERROR, @"tcsetattr on %@ returned -1, %s\n",self.serialPort, strerror(errno));
         return false;
     }
 
@@ -278,8 +280,11 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 -(BOOL)sendCommand:(NSString *)command
 {
     if(_serialDescriptor < 1 || [command length] != 1 || nil == _serialHandle) {
+        WOLog(WOLOG_ANNOY,@"attempting to send command with no device open\n");
         return false;
     }
+
+    WOLog(WOLOG_ANNOY,@"sending %@ to %@\n",command, self.serialPort);
 
     [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
 
@@ -343,6 +348,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(void)gotNoResponse
 {
+    WOLog(WOLOG_ANNOY,@"received no response from %@ after %d seconds\n",self.serialPort, RESPONSE_TIMEOUT);
     self.serialPort = nil;
     [self closeSerialPort];
     if(self.serialControlState == WOSerialControlScanning) {

@@ -9,6 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "WODisplayModel.h"
 #import "WOSerialControl.h"
+#import "WOLogging.h"
 
 #define WODisplayModelAverage 0
 #define WODisplayModelPEP     1
@@ -30,9 +31,9 @@ static NSString * kUpdateInterval = @"updateInterval";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setConnectedMode:) name:kWOSerialControlConnectedNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setScanningMode:) name:kWOSerialControlScanningNotification object:nil];
 
-    NSDictionary * defaults = @{kAutomaticRanging : @YES, kWriteSettingsToFlash: @YES,
-                                kUpdateIndexIntervals : @[@0.25f, @0.5f, @1.0f, @2.0f, @5.0f],
-                                kUpdateIntervalIndex : @1, kUpdateInterval : @0.0f};
+    NSDictionary * defaults = @{ kAutomaticRanging : @YES, kWriteSettingsToFlash: @YES,
+                                 kUpdateIndexIntervals : @[@0.25f, @0.5f, @1.0f, @2.0f, @5.0f],
+                                 kUpdateIntervalIndex : @1, kUpdateInterval : @0.0f };
 
     [[NSUserDefaults standardUserDefaults] registerDefaults:defaults];
     [[NSUserDefaults standardUserDefaults] addObserver:self forKeyPath:kAutomaticRanging options:NSKeyValueObservingOptionNew context:nil];
@@ -45,7 +46,7 @@ static NSString * kUpdateInterval = @"updateInterval";
     return self;
 }
 
--(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *,id> *)change context:(void *)context
+-(void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSString *, id> *)change context:(void *)context
 {
     if([keyPath isEqualToString:kAutomaticRanging]) {
         [self updateRangingValue];
@@ -54,7 +55,7 @@ static NSString * kUpdateInterval = @"updateInterval";
     }
 }
 
--(NSArray*)updateIndexIntervals
+-(NSArray *)updateIndexIntervals
 {
     return [[NSUserDefaults standardUserDefaults] objectForKey:kUpdateIndexIntervals];
 }
@@ -68,14 +69,17 @@ static NSString * kUpdateInterval = @"updateInterval";
 {
     return [[self.updateIndexIntervals objectAtIndex:1] stringValue];
 }
+
 -(NSString *)updateIndexInterval_2
 {
     return [[self.updateIndexIntervals objectAtIndex:2] stringValue];
 }
+
 -(NSString *)updateIndexInterval_3
 {
     return [[self.updateIndexIntervals objectAtIndex:3] stringValue];
 }
+
 -(NSString *)updateIndexInterval_4
 {
     return [[self.updateIndexIntervals objectAtIndex:4] stringValue];
@@ -374,6 +378,7 @@ static NSString * kUpdateInterval = @"updateInterval";
 -(float)updateInterval
 {
     float updateInterval = [[NSUserDefaults standardUserDefaults] floatForKey:kUpdateInterval];
+
     if( updateInterval == 0) {
         return _updateInterval;
     } else {
@@ -384,12 +389,13 @@ static NSString * kUpdateInterval = @"updateInterval";
 -(void)updateIntervalValue
 {
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
+
     self.updateInterval =  [[[defaults objectForKey:kUpdateIndexIntervals] objectAtIndex:[defaults integerForKey:kUpdateIntervalIndex] - 1] floatValue];
 }
 
 -(void)updateRangingValue
 {
-    if([[NSUserDefaults standardUserDefaults]  boolForKey:kAutomaticRanging]) {
+    if([[NSUserDefaults standardUserDefaults] boolForKey:kAutomaticRanging]) {
         [self.serialControl pushCommand:@"0"];
     } else {
         unichar commandChar = '1' + self.currentRange;

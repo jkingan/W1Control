@@ -17,6 +17,5 @@
 @property (retain) IBOutlet WODisplayModel * displayModel;
 @property (retain) IBOutlet WOResponseHandler * responseHandler;
 @property (retain) IBOutlet WOSerialControl * serialControl;
-@property (assign) IBOutlet NSViewController * logWindow;
 @end
 
