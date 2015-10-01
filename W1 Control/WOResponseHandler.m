@@ -9,10 +9,11 @@
 #import "WOResponseHandler.h"
 #import "WODisplayModel.h"
 #import "WOSerialControl.h"
+#import "WOLogging.h"
 
 NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
-#define CHECK_LENGTH(_response, _responseLength) { if([_response length] != _responseLength) { NSLog(@"%s: response [%@] is not correct length of %d", __FUNCTION__, _response, _responseLength); return false; } }
+#define CHECK_LENGTH(_response, _responseLength) { if([_response length] != _responseLength) { WOLog(WOLOG_STATUS, @"response %@ is not correct length of %d", _response, _responseLength); return false; } }
 
 @implementation WOResponseHandler
 
@@ -46,9 +47,17 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
 
 -(BOOL)parseResponse:(NSString *)response
 {
-    if(nil == response || [response length] < 4 || NO == [response hasSuffix:@";"]) {
+    if(nil == response) {
+        WOLog(WOLOG_ALWAYS, @"received nil response\n");
         return false;
     }
+
+    if([response length] < 4 || NO == [response hasSuffix:@";"]) {
+        WOLog(WOLOG_ERROR, @"received response %@ that didn't appear to be from a W1\n");
+        return false;
+    }
+
+    WOLog(WOLOG_ANNOY, @"handling %@\n", response);
 
     BOOL returnCode = false;
     char firstChar = [response characterAtIndex:0];
@@ -76,6 +85,7 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
             returnCode = [self handleUserSettings:response];
             break;
         default:
+            WOLog(WOLOG_STATUS, @"ignoring unhandled message %@\n", response);
             break;
     }
 

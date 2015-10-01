@@ -391,6 +391,7 @@ static NSString * kUpdateInterval = @"updateInterval";
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 
     self.updateInterval =  [[[defaults objectForKey:kUpdateIndexIntervals] objectAtIndex:[defaults integerForKey:kUpdateIntervalIndex] - 1] floatValue];
+    WOLog(WOLOG_STATUS,@"set update interval to %0.2f\n",self.updateInterval);
 }
 
 -(void)updateRangingValue

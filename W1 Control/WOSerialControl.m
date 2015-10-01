@@ -43,7 +43,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     if(!self.serialPort) {
         self.serialPort = @"";
     }
-    
+
     return self;
 }
 
@@ -54,9 +54,10 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 #pragma mark Misc
 
--(void)setSerialPort:(NSString*)serialPort
+-(void)setSerialPort:(NSString *)serialPort
 {
     NSString * oldSerialPort = _serialPort;
+
     _serialPort = serialPort;
 
     if(!oldSerialPort) {
@@ -109,7 +110,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
         [self sendCommandDispatchResponse:command];
         return true;
     }
-    
+
     return false;
 }
 
@@ -134,7 +135,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 -(void)_checkNextSerialPort
 {
     if(0 == [_serialPortList count]) {
-        WOLog(WOLOG_ANNOY,@"no more ports to check\n");
+        WOLog(WOLOG_ANNOY, @"no more ports to check\n");
         [self setDisconnectedStatus];
         _serialPortList = nil;
         return;
@@ -198,10 +199,12 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     [self closeSerialPort];
     [self flushCommandQueue];
 
+    WOLog(WOLOG_STATUS,@"opening port %@\n", port);
+
     int newDescriptor = open([port UTF8String], O_RDWR | O_NONBLOCK);
 
     if(newDescriptor < 0) {
-        WOLog(WOLOG_STATUS,@"open of %@ returned -1, %s\n",self.serialPort, strerror(errno));
+        WOLog(WOLOG_STATUS, @"open of %@ returned -1, %s\n", self.serialPort, strerror(errno));
         return false;
     }
 
@@ -250,7 +253,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     cfsetspeed(&_serialSettings, B9600);
 
     if(tcsetattr(_serialDescriptor, TCSANOW, &_serialSettings) == -1) {
-        WOLog(WOLOG_ERROR, @"tcsetattr on %@ returned -1, %s\n",self.serialPort, strerror(errno));
+        WOLog(WOLOG_ERROR, @"tcsetattr on %@ returned -1, %s\n", self.serialPort, strerror(errno));
         return false;
     }
 
@@ -280,11 +283,11 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 -(BOOL)sendCommand:(NSString *)command
 {
     if(_serialDescriptor < 1 || [command length] != 1 || nil == _serialHandle) {
-        WOLog(WOLOG_ANNOY,@"attempting to send command with no device open\n");
+        WOLog(WOLOG_ANNOY, @"attempting to send command with no device open\n");
         return false;
     }
 
-    WOLog(WOLOG_ANNOY,@"sending %@ to %@\n",command, self.serialPort);
+    WOLog(WOLOG_ANNOY, @"sending %@ to %@\n", command, self.serialPort);
 
     [self performSelector:@selector(gotNoResponse) withObject:nil afterDelay:RESPONSE_TIMEOUT];
 
@@ -348,7 +351,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 -(void)gotNoResponse
 {
-    WOLog(WOLOG_ANNOY,@"received no response from %@ after %d seconds\n",self.serialPort, RESPONSE_TIMEOUT);
+    WOLog(WOLOG_ANNOY, @"received no response from %@ after %d seconds\n", self.serialPort, RESPONSE_TIMEOUT);
     self.serialPort = nil;
     [self closeSerialPort];
     if(self.serialControlState == WOSerialControlScanning) {
@@ -360,7 +363,7 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
 
 #pragma mark Serial Port Lister
 
-static kern_return_t _createSerialIterator(io_iterator_t * serialIterator)
+-(kern_return_t)createSerialIterator:(io_iterator_t *)serialIterator
 {
     kern_return_t kernResult;
     mach_port_t masterPort;
@@ -380,7 +383,7 @@ static kern_return_t _createSerialIterator(io_iterator_t * serialIterator)
     return kernResult;
 }
 
-static NSString * _getRegistryString(io_object_t sObj, char * propName)
+-(NSString *)getRegistryString:(io_object_t)sObj withPropName:(const char *)propName
 {
     static char resultStr[256];
     NSString * nameCFstring;
@@ -402,14 +405,14 @@ static NSString * _getRegistryString(io_object_t sObj, char * propName)
     io_iterator_t theSerialIterator;
     io_object_t theObject;
 
-    if(_createSerialIterator(&theSerialIterator) != KERN_SUCCESS) {
+    if([self createSerialIterator:&theSerialIterator] != KERN_SUCCESS) {
         return nil;
     }
 
     NSMutableArray * array = [NSMutableArray arrayWithCapacity:10];
 
     while((theObject = IOIteratorNext(theSerialIterator))) {
-        NSString * device = _getRegistryString(theObject, kIOCalloutDeviceKey);
+        NSString * device = [self getRegistryString:theObject withPropName:kIOCalloutDeviceKey];
         if(device) {
             [array addObject:device];
         }
