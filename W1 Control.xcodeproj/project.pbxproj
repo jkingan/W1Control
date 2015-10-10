@@ -67,6 +67,7 @@
 		8269C42B1BB2FB3300074C19 /* WOResponseHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOResponseHandler.h; sourceTree = "<group>"; };
 		8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOResponseHandler.m; sourceTree = "<group>"; };
 		826D5ECE1BB9D78C00841143 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
+		8275FAF51BBEDFF100B92B63 /* w1Icon.ai */ = {isa = PBXFileReference; lastKnownFileType = text; path = w1Icon.ai; sourceTree = "<group>"; };
 		82FC4ED51BBB37B100655976 /* WOLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOLogging.h; sourceTree = "<group>"; };
 		82FC4ED61BBB37B100655976 /* WOLogging.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOLogging.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -142,6 +143,7 @@
 		82634D101BB1EBC20004D14C /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				8275FAF51BBEDFF100B92B63 /* w1Icon.ai */,
 				82634D111BB1EBC20004D14C /* main.m */,
 			);
 			name = "Supporting Files";

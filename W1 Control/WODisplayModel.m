@@ -103,15 +103,18 @@ static NSString * kUpdateInterval = @"updateInterval";
     [self updateDisplay];
 
     self.connectedImage = [NSImage imageNamed:@"Connected"];
-
-    [self performSelector:@selector(updateDisplay) withObject:nil afterDelay:self.updateInterval];
 }
 
 -(void)setDisconnectedMode:(NSNotification *)notification
 {
     self.isConnected = NO;
-    [[NSRunLoop mainRunLoop] cancelPerformSelector:@selector(updateDisplay) target:self argument:nil];
+    [self cancelUpdateDisplay];
     self.connectedImage = [NSImage imageNamed:@"Disconnected"];
+}
+
+-(void)cancelUpdateDisplay
+{
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateDisplay) object:nil];
 }
 
 -(void)updateDisplay
@@ -391,6 +394,9 @@ static NSString * kUpdateInterval = @"updateInterval";
     NSUserDefaults * defaults = [NSUserDefaults standardUserDefaults];
 
     self.updateInterval =  [[[defaults objectForKey:kUpdateIndexIntervals] objectAtIndex:[defaults integerForKey:kUpdateIntervalIndex] - 1] floatValue];
+
+    [self cancelUpdateDisplay];
+    [self updateDisplay];
     WOLog(WOLOG_STATUS,@"set update interval to %0.2f\n",self.updateInterval);
 }
 
