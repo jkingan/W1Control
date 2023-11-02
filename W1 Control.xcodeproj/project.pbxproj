@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		820927421C0E3F8B00E737B9 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 820927411C0E3F8B00E737B9 /* WOSerialControl.m */; };
 		82634D0F1BB1EBC20004D14C /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D0E1BB1EBC20004D14C /* AppDelegate.m */; };
 		82634D121BB1EBC20004D14C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D111BB1EBC20004D14C /* main.m */; };
 		82634D151BB1EBC20004D14C /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D141BB1EBC20004D14C /* ViewController.m */; };
@@ -14,18 +15,18 @@
 		82634D1A1BB1EBC20004D14C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 82634D181BB1EBC20004D14C /* Main.storyboard */; };
 		82634D251BB1EBC20004D14C /* W1_ControlTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D241BB1EBC20004D14C /* W1_ControlTests.m */; };
 		82634D301BB1EBC20004D14C /* W1_ControlUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D2F1BB1EBC20004D14C /* W1_ControlUITests.m */; };
-		82634D3F1BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
-		82634D401BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
-		82634D411BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; settings = {ASSET_TAGS = (); }; };
-		8269C4271BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
-		8269C4281BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
-		8269C4291BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; settings = {ASSET_TAGS = (); }; };
-		8269C42D1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
-		8269C42E1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
-		8269C42F1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; settings = {ASSET_TAGS = (); }; };
-		82FC4ED71BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; settings = {ASSET_TAGS = (); }; };
-		82FC4ED81BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; settings = {ASSET_TAGS = (); }; };
-		82FC4ED91BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; settings = {ASSET_TAGS = (); }; };
+		82634D3F1BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; };
+		82634D401BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; };
+		82634D411BB1ED6C0004D14C /* WODisplayModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 82634D3E1BB1ED6C0004D14C /* WODisplayModel.m */; };
+		8269C4271BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; };
+		8269C4281BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; };
+		8269C4291BB2601C00074C19 /* WOSerialControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C4261BB2601C00074C19 /* WOSerialControl.m */; };
+		8269C42D1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; };
+		8269C42E1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; };
+		8269C42F1BB2FB3300074C19 /* WOResponseHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8269C42C1BB2FB3300074C19 /* WOResponseHandler.m */; };
+		82FC4ED71BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; };
+		82FC4ED81BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; };
+		82FC4ED91BBB37B100655976 /* WOLogging.m in Sources */ = {isa = PBXBuildFile; fileRef = 82FC4ED61BBB37B100655976 /* WOLogging.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		820927401C0E3F8B00E737B9 /* WOSerialControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WOSerialControl.h; sourceTree = "<group>"; };
+		820927411C0E3F8B00E737B9 /* WOSerialControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WOSerialControl.m; sourceTree = "<group>"; };
 		82634D0A1BB1EBC20004D14C /* W1 Control.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "W1 Control.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		82634D0D1BB1EBC20004D14C /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		82634D0E1BB1EBC20004D14C /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -121,6 +124,8 @@
 		82634D0C1BB1EBC20004D14C /* W1 Control */ = {
 			isa = PBXGroup;
 			children = (
+				820927401C0E3F8B00E737B9 /* WOSerialControl.h */,
+				820927411C0E3F8B00E737B9 /* WOSerialControl.m */,
 				82AAC2A41BCC029A00C94C5F /* W1 Control.entitlements */,
 				82634D0D1BB1EBC20004D14C /* AppDelegate.h */,
 				82634D0E1BB1EBC20004D14C /* AppDelegate.m */,
@@ -245,10 +250,12 @@
 					};
 					82634D1F1BB1EBC20004D14C = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 7D3K4AUUW9;
 						TestTargetID = 82634D091BB1EBC20004D14C;
 					};
 					82634D2A1BB1EBC20004D14C = {
 						CreatedOnToolsVersion = 7.0;
+						DevelopmentTeam = 7D3K4AUUW9;
 						TestTargetID = 82634D091BB1EBC20004D14C;
 					};
 				};
@@ -258,6 +265,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -307,6 +315,7 @@
 				82634D3F1BB1ED6C0004D14C /* WODisplayModel.m in Sources */,
 				82FC4ED71BBB37B100655976 /* WOLogging.m in Sources */,
 				82634D151BB1EBC20004D14C /* ViewController.m in Sources */,
+				820927421C0E3F8B00E737B9 /* WOSerialControl.m in Sources */,
 				8269C4271BB2601C00074C19 /* WOSerialControl.m in Sources */,
 				82634D121BB1EBC20004D14C /* main.m in Sources */,
 				82634D0F1BB1EBC20004D14C /* AppDelegate.m in Sources */,
@@ -385,6 +394,8 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 7D3K4AUUW9;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -428,6 +439,8 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 7D3K4AUUW9;
+				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -449,9 +462,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "W1 Control/W1 Control.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "W1 Control/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.kg7nux.w1control;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -462,9 +477,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "W1 Control/W1 Control.entitlements";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				COMBINE_HIDPI_IMAGES = YES;
 				INFOPLIST_FILE = "W1 Control/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 11.0;
 				PRODUCT_BUNDLE_IDENTIFIER = org.kg7nux.w1control;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
