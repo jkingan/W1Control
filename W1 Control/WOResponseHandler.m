@@ -52,8 +52,8 @@ NSString * kWOCommandResponseReceived = @"kWOCommandResponseReceived";
         return false;
     }
 
-    if([response length] < 4 || NO == [response hasSuffix:@";"]) {
-        WOLog(WOLOG_ERROR, @"received response %@ that didn't appear to be from a W1\n");
+    if([response length] < 3 || NO == [response hasSuffix:@";"]) {
+        WOLog(WOLOG_ERROR, @"received response %@ that didn't appear to be from a W1\n", response);
         return false;
     }
 

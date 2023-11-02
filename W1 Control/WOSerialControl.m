@@ -304,26 +304,31 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
     }
 
     if(nil == _commandResponse) {
-        _commandResponse = [[NSMutableData alloc] initWithCapacity:30];
+        _commandResponse = [[NSMutableString alloc] initWithCapacity:100];
     }
 
-    NSData * newData;
+    NSData * newData = nil;
 
-    @try {
-        newData = [_serialHandle availableData];
-        if([newData length]) {
-            [_commandResponse appendData:newData];
+    while(nil == newData) {
+
+        @try {
+            newData = [_serialHandle availableData];
+            if([newData length]) {
+                [_commandResponse appendString:[[NSString alloc] initWithData:newData encoding:NSUTF8StringEncoding]];
+            }
+        }
+        @catch(NSException * e) {
+            WOLog(WOLOG_ANNOY,@"Got exception [%@]\n",[e description]);
         }
     }
-    @catch(NSException * e) {
-    }
 
-    NSString * response = [[NSString alloc] initWithData:_commandResponse encoding:NSUTF8StringEncoding];
+    if([_commandResponse containsString:@";"]) {
+        NSRange r = [_commandResponse rangeOfString:@";"];
+        NSString * response = [_commandResponse substringToIndex:r.location+1];
+        r.length = r.location+1;
+        r.location = 0;
+        [_commandResponse deleteCharactersInRange:r];
 
-    [_serialHandle waitForDataInBackgroundAndNotify];
-
-    if([response hasSuffix:@";"]) {
-        _commandResponse = nil;
         // No W1 response is less than three characters
         if([response length] >= 3) {
             [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(gotNoResponse) object:nil];
@@ -346,6 +351,8 @@ NSString * kWOSerialControlScanningNotification = @"kWOSerialControlScanningNoti
             self.serialControlState = WOSerialControlIdle;
             [self sendNextCommand];
         }
+    } else {
+        [_serialHandle waitForDataInBackgroundAndNotify];
     }
 }
 

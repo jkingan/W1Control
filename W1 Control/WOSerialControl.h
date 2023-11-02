@@ -28,7 +28,7 @@ extern NSString * kWOSerialControlScanningNotification;
 
     NSMutableArray * _commandQueue;
 
-    NSMutableData * _commandResponse;
+    NSMutableString * _commandResponse;
     NSMutableArray * _serialPortList;
 }
 @property (nonatomic, copy) NSString * serialPort;
